@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="TaskAudit.Api/TaskAudit.Api.csproj" />
+    <Project Path="TaskEvents.Consumer/TaskEvents.Consumer.csproj" />
+    <Project Path="TaskManagement.Api/TaskManagement.Api.csproj" />
+    <Project Path="TaskManagement.Contracts/TaskManagement.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="TaskManagement.UnitTests/TaskManagement.UnitTests.csproj" />
+  </Folder>
+</Solution>
