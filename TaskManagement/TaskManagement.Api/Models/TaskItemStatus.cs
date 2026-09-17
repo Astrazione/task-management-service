@@ -2,8 +2,8 @@
 {
 	public enum TaskItemStatus
 	{
-		New,
-		InProgress,
-		Completed
+		New = 0,
+		InProgress = 1,
+		Completed = 2
 	}
 }

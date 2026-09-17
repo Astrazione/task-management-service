@@ -1,4 +1,7 @@
-﻿namespace TaskManagement.Api.Endpoints.Tasks
+﻿using TaskManagement.Api.Contracts.Tasks;
+using TaskManagement.Api.Validation;
+
+namespace TaskManagement.Api.Endpoints.Tasks
 {
 	public static class TaskEndpoints
 	{
@@ -8,10 +11,16 @@
 				.MapGroup("/api/tasks")
 				.WithTags("Tasks");
 
-			group.MapPost("/", CreateTaskEndpoint.HandleAsync);
+			group.MapPost("/", CreateTaskEndpoint.HandleAsync)
+				.AddEndpointFilter<ValidationFilter<CreateTaskRequest>>();
+
 			group.MapGet("/", GetAllTasksEndpoint.HandleAsync);
+
 			group.MapGet("/{id:guid}", GetTaskEndpoint.HandleAsync);
-			group.MapPut("/{id:guid}", UpdateTaskEndpoint.HandleAsync);
+
+			group.MapPut("/{id:guid}", UpdateTaskEndpoint.HandleAsync)
+				.AddEndpointFilter<ValidationFilter<UpdateTaskRequest>>();
+
 			group.MapDelete("/{id:guid}", DeleteTaskEndpoint.HandleAsync);
 
 			return endpoints;
