@@ -1,13 +1,12 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using TaskManagement.Contracts.Events;
 using TaskManagement.Contracts.Grpc;
-
-using TaskAuditGrpcClient = TaskManagement.Contracts.Grpc.TaskAudit.TaskAuditClient;
+using TaskAuditClient = TaskManagement.Contracts.Grpc.TaskAudit.TaskAuditClient;
 
 
 namespace TaskManagement.Api.Clients.TaskAudit
 {
-	public sealed class TaskAuditClient(TaskAuditGrpcClient client) : ITaskAuditClient
+	public sealed class GrpcTaskAuditClient(TaskAuditClient client) : ITaskAuditClient
 	{
 		public async Task LogAsync(TaskChangedEvent taskEvent, CancellationToken cancellationToken)
 		{

@@ -4,6 +4,7 @@ using TaskManagement.Api.Data;
 using TaskManagement.Api.Endpoints.Tasks;
 using TaskManagement.Api.Messaging;
 using TaskManagement.Api.Services;
+using TaskManagement.Contracts.Grpc;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,13 +20,13 @@ builder.Services.AddDbContext<TaskDbContext>(opitons =>
 builder.Services.Configure<KafkaOptions>(
 	builder.Configuration.GetSection(KafkaOptions.SectionName));
 
-builder.Services.AddGrpcClient<TaskAuditClient>(options =>
+builder.Services.AddGrpcClient<TaskAudit.TaskAuditClient>(options =>
 {
 	options.Address = new Uri(builder.Configuration["Grpc:TaskAuditUrl"]!);
 });
 
 builder.Services.AddScoped<ITaskService, TaskService>();
-builder.Services.AddScoped<ITaskAuditClient, TaskAuditClient>();
+builder.Services.AddScoped<ITaskAuditClient, GrpcTaskAuditClient>();
 builder.Services.AddSingleton<ITaskEventProducer, TaskEventProducer>();
 
 
@@ -40,5 +41,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapTaskEndpoints();
+
+await using (var scope = app.Services.CreateAsyncScope())
+{
+	var dbContext = scope.ServiceProvider.GetRequiredService<TaskDbContext>();
+
+	await dbContext.Database.MigrateAsync();
+}
 
 app.Run();
