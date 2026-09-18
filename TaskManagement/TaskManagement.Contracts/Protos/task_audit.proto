@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option csharp_namespace = "TaskManagement.Contracts.Grpc";
+
+package taskaudit;
+
+import "google/protobuf/timestamp.proto";
+
+service TaskAudit {
+	rpc LogChange (TaskChangeRequest) returns (TaskChangeReply);
+}
+
+enum TaskEventKind {
+	UNCPECIFIED = 0;
+	CREATED = 1;
+	UPDATED = 2;
+	DELETED = 3;
+}
+
+message TaskChangeRequest {
+	string event_id = 1;
+	string task_id = 2;
+
+	TaskEventKind event_kind = 3;
+
+	string title = 4;
+	string description = 5;
+	int32 status = 6;
+	google.protobuf.Timestamp happened_at = 7;
+}
+
+message TaskChangeReply {}

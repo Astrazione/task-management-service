@@ -1,11 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TaskManagement.Api.Clients.TaskAudit;
 using TaskManagement.Api.Contracts.Tasks;
 using TaskManagement.Api.Data;
+using TaskManagement.Api.Messaging;
 using TaskManagement.Api.Models;
+using TaskManagement.Contracts.Events;
 
 namespace TaskManagement.Api.Services
 {
-	public sealed class TaskService(TaskDbContext dbContext) : ITaskService
+	public sealed class TaskService(
+		TaskDbContext dbContext,
+		ITaskEventProducer eventProducer,
+		ITaskAuditClient auditClient,
+		ILogger<TaskService> logger) : ITaskService
 	{
 		public async Task<TaskResponse> CreateAsync(CreateTaskRequest request, CancellationToken cancellationToken)
 		{
@@ -18,7 +25,11 @@ namespace TaskManagement.Api.Services
 
 			dbContext.Tasks.Add(task);
 			await dbContext.SaveChangesAsync(cancellationToken);
-			
+
+			var taskEvent = CreateEvent(task, TaskEventType.Created);
+			await auditClient.LogAsync(taskEvent, cancellationToken);
+			await eventProducer.PublishAsync(taskEvent, cancellationToken);
+
 			return MapToResponse(task);
 		}
 
@@ -50,6 +61,10 @@ namespace TaskManagement.Api.Services
 
 			await dbContext.SaveChangesAsync(cancellationToken);
 
+			var taskEvent = CreateEvent(task, TaskEventType.Updated);
+			await auditClient.LogAsync(taskEvent, cancellationToken);
+			await eventProducer.PublishAsync(taskEvent, cancellationToken);
+
 			return MapToResponse(task);
 		}
 
@@ -59,8 +74,13 @@ namespace TaskManagement.Api.Services
 
 			if (task is null) return false;
 
+			var taskEvent = CreateEvent(task, TaskEventType.Deleted);
+
 			dbContext.Tasks.Remove(task);
 			await dbContext.SaveChangesAsync(cancellationToken);
+
+			await auditClient.LogAsync(taskEvent, cancellationToken);
+			await eventProducer.PublishAsync(taskEvent, cancellationToken);
 
 			return true;
 		}
@@ -73,6 +93,17 @@ namespace TaskManagement.Api.Services
 				task.Status,
 				task.CreatedAt,
 				task.UpdatedAt
+			);
+
+		private static TaskChangedEvent CreateEvent(TaskItem taskItem, TaskEventType eventType) =>
+			new(
+				EventId: Guid.NewGuid(),
+				TaskId: taskItem.Id,
+				EventType: eventType,
+				Title: taskItem.Title,
+				Description: taskItem.Description,
+				Status: (int)taskItem.Status,
+				HappenedAt: DateTimeOffset.UtcNow
 			);
 	}
 }
