@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.Api.Data;
 using TaskManagement.Api.Endpoints.Tasks;
+using TaskManagement.Api.Messaging;
 using TaskManagement.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,11 @@ builder.Services.AddDbContext<TaskDbContext>(opitons =>
 });
 
 builder.Services.AddScoped<ITaskService, TaskService>();
+
+builder.Services.Configure<KafkaOptions>(
+	builder.Configuration.GetSection(KafkaOptions.SectionName));
+
+builder.Services.AddSingleton<ITaskEventProducer, TaskEventProducer>();
 
 var app = builder.Build();
 
