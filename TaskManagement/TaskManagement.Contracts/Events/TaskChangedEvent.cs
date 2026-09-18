@@ -6,7 +6,7 @@
 		TaskEventType EventType,
 		string Title,
 		string? Description,
-		int Status,
+		string Status,
 		DateTimeOffset HappenedAt
 	);
 }

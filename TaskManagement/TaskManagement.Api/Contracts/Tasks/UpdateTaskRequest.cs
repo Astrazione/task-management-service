@@ -4,8 +4,11 @@ using TaskManagement.Api.Models;
 namespace TaskManagement.Api.Contracts.Tasks
 {
 	/// <summary>
-	/// DTO для обновления задачи
+	/// Запрос на обновление записи
 	/// </summary>
+	/// <param name="Title">Название задачи</param>
+	/// <param name="Description">Описание задачи</param>
+	/// <param name="Status">Статус задачи</param>
 	public sealed record UpdateTaskRequest(
 		[property: Required]
 		[property: StringLength(200)]

@@ -25,7 +25,7 @@ message TaskChangeRequest {
 
 	string title = 4;
 	string description = 5;
-	int32 status = 6;
+	string status = 6;
 	google.protobuf.Timestamp happened_at = 7;
 }
 

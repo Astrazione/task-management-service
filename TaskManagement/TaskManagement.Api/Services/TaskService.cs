@@ -11,8 +11,7 @@ namespace TaskManagement.Api.Services
 	public sealed class TaskService(
 		TaskDbContext dbContext,
 		ITaskEventProducer eventProducer,
-		ITaskAuditClient auditClient,
-		ILogger<TaskService> logger) : ITaskService
+		ITaskAuditClient auditClient) : ITaskService
 	{
 		public async Task<TaskResponse> CreateAsync(CreateTaskRequest request, CancellationToken cancellationToken)
 		{
@@ -102,7 +101,7 @@ namespace TaskManagement.Api.Services
 				EventType: eventType,
 				Title: taskItem.Title,
 				Description: taskItem.Description,
-				Status: (int)taskItem.Status,
+				Status: taskItem.Status.ToString(),
 				HappenedAt: DateTimeOffset.UtcNow
 			);
 	}

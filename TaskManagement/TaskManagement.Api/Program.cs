@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using System.Text.Json.Serialization;
 using TaskManagement.Api.Clients.TaskAudit;
 using TaskManagement.Api.Data;
 using TaskManagement.Api.Endpoints.Tasks;
@@ -9,29 +11,50 @@ using TaskManagement.Contracts.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var services = builder.Services;
+var configuration = builder.Configuration;
 
-builder.Services.AddDbContext<TaskDbContext>(opitons =>
+// API
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen(options =>
 {
-	opitons.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
+	var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+	var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+	options.IncludeXmlComments(xmlPath);
 });
 
+services.ConfigureHttpJsonOptions(options =>
+{
+	options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
+// DB
+builder.Services.AddDbContext<TaskDbContext>(options =>
+{
+	options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
+});
+
+// Kafka
 builder.Services.Configure<KafkaOptions>(
 	builder.Configuration.GetSection(KafkaOptions.SectionName));
 
+builder.Services.AddSingleton<ITaskEventProducer, TaskEventProducer>();
+
+// gRPC
 builder.Services.AddGrpcClient<TaskAudit.TaskAuditClient>(options =>
 {
 	options.Address = new Uri(builder.Configuration["Grpc:TaskAuditUrl"]!);
 });
 
-builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITaskAuditClient, GrpcTaskAuditClient>();
-builder.Services.AddSingleton<ITaskEventProducer, TaskEventProducer>();
 
+// Application
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 var app = builder.Build();
 
+// Middleware
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
@@ -39,9 +62,26 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.Use(async (context, next) =>
+{
+	try
+	{
+		await next(context);
+	}
+	catch (BadHttpRequestException)
+	{
+		context.Response.StatusCode = StatusCodes.Status400BadRequest;
+		await context.Response.WriteAsJsonAsync(new
+		{
+			error = "Invalid request body. Check the provided values."
+		});
+	}
+});
 
+// Endpoints
 app.MapTaskEndpoints();
 
+// DB migrations
 await using (var scope = app.Services.CreateAsyncScope())
 {
 	var dbContext = scope.ServiceProvider.GetRequiredService<TaskDbContext>();

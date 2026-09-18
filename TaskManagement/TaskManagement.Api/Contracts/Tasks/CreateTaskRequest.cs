@@ -4,8 +4,11 @@ using TaskManagement.Api.Models;
 namespace TaskManagement.Api.Contracts.Tasks
 {
 	/// <summary>
-	/// DTO для создания задачи
+	/// Запрос на создание задачи
 	/// </summary>
+	/// <param name="Title">Название задачи</param>
+	/// <param name="Description">Описание задачи</param>
+	/// <param name="Status">Статус задачи</param>
 	public sealed record CreateTaskRequest(
 		[property: Required]
 		[property: StringLength(200)]
