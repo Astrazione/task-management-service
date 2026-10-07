@@ -1,4 +1,4 @@
-﻿using TaskManagement.Contracts.Events;
+﻿using TaskManagement.Api.Contracts.Events;
 
 namespace TaskManagement.Api.Messaging
 {

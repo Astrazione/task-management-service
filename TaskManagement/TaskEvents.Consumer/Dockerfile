@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 
@@ -9,7 +9,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 COPY ["TaskEvents.Consumer/TaskEvents.Consumer.csproj", "TaskEvents.Consumer/"]
-COPY ["TaskManagement.Contracts/TaskManagement.Contracts.csproj", "TaskManagement.Contracts/"]
+COPY ["TaskManagement.Api/TaskManagement.Api.csproj", "TaskManagement.Api/"]
 
 RUN dotnet restore "./TaskEvents.Consumer/TaskEvents.Consumer.csproj"
 COPY . .

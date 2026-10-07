@@ -1,4 +1,4 @@
-﻿using TaskManagement.Api.Contracts.Tasks;
+﻿using TaskManagement.Api.Contracts;
 
 namespace TaskManagement.Api.Services
 {

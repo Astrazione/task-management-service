@@ -11,7 +11,6 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 COPY ["TaskManagement.Api/TaskManagement.Api.csproj", "TaskManagement.Api/"]
-COPY ["TaskManagement.Contracts/TaskManagement.Contracts.csproj", "TaskManagement.Contracts/"]
 
 RUN dotnet restore "./TaskManagement.Api/TaskManagement.Api.csproj"
 COPY . .

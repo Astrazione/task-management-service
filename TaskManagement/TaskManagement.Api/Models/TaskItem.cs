@@ -4,18 +4,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace TaskManagement.Api.Models
 {
 	/// <summary>
-	/// Задача пользователя
+	/// User task
 	/// </summary>
 	public sealed class TaskItem
 	{
 		/// <summary>
-		/// Уникальный идентификатор задачи
+		/// Task unique identifier
 		/// </summary>
 		[Key]
 		public Guid Id { get; set; } = Guid.NewGuid();
 
 		/// <summary>
-		/// Название задачи
+		/// Task title
 		/// </summary>
 		[Required]
 		[MaxLength(200)]
@@ -23,26 +23,26 @@ namespace TaskManagement.Api.Models
 		public string Title { get; set; } = null!;
 
 		/// <summary>
-		/// Описание задачи
+		/// Task description
 		/// </summary>
 		[MaxLength(2000)]
 		[Column(TypeName = "nvarchar(2000)")]
 		public string? Description { get; set; }
 
 		/// <summary>
-		/// Статус задачи
+		/// Task status
 		/// </summary>
 		[Required]
 		public TaskItemStatus Status { get; set; } = TaskItemStatus.New;
 
 		/// <summary>
-		/// Дата создания задачи
+		/// Date and time then the task was created
 		/// </summary>
 		[Required]
 		public DateTimeOffset CreatedAt { get; set; }
 
 		/// <summary>
-		/// Дата последнего изменения задачи
+		/// Date and time when the task was last updated
 		/// </summary>
 		[Required]
 		public DateTimeOffset UpdatedAt { get; set; }

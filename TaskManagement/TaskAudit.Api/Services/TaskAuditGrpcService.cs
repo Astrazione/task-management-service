@@ -1,7 +1,7 @@
 ﻿using Grpc.Core;
-using TaskManagement.Contracts.Grpc;
+using TaskManagement.Api.Contracts.Grpc;
 
-using TaskAuditGrpc = TaskManagement.Contracts.Grpc.TaskAudit;
+using TaskAuditGrpc = TaskManagement.Api.Contracts.Grpc.TaskAudit;
 
 namespace TaskAudit.Api.Services
 {
@@ -12,7 +12,7 @@ namespace TaskAudit.Api.Services
 			ServerCallContext context)
 		{
 			_logger.LogInformation(
-				"Получено событие {EventId}, задача: {TaskId}, название задачи: {Title}, статус задачи: {Status}, тип события: {EventKind}",
+				"Received event {EventId} via gRPC, task: {TaskId}, task title: {Title}, task status: {Status}, event type: {EventKind}",
 				request.EventId,
 				request.TaskId,
 				request.Title,

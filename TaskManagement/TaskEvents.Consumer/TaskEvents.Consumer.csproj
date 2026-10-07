@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-TaskEvents.Consumer-6f033aa3-b451-4af8-8a9a-1853cdfa0e35</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <_GetChildProjectCopyToOutputDirectoryItems>false</_GetChildProjectCopyToOutputDirectoryItems>
+    <_GetChildProjectCopyToPublishDirectoryItems>false</_GetChildProjectCopyToPublishDirectoryItems>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TaskManagement.Contracts\TaskManagement.Contracts.csproj" />
+    <ProjectReference Include="..\TaskManagement.Api\TaskManagement.Api.csproj" />
   </ItemGroup>
 </Project>

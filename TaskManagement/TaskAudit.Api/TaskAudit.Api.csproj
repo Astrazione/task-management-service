@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>a297e142-997b-4f9a-ac62-37cd59b7fafc</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <_GetChildProjectCopyToOutputDirectoryItems>false</_GetChildProjectCopyToOutputDirectoryItems>
+    <_GetChildProjectCopyToPublishDirectoryItems>false</_GetChildProjectCopyToPublishDirectoryItems>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TaskManagement.Contracts\TaskManagement.Contracts.csproj" />
+    <ProjectReference Include="..\TaskManagement.Api\TaskManagement.Api.csproj" />
   </ItemGroup>
 
 </Project>

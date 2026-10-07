@@ -1,4 +1,4 @@
-﻿namespace TaskManagement.Contracts.Events
+﻿namespace TaskManagement.Api.Contracts.Events
 {
 	public enum TaskEventType
 	{

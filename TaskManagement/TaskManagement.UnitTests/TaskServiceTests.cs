@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using TaskManagement.Api.Clients.TaskAudit;
-using TaskManagement.Api.Contracts.Tasks;
+using TaskManagement.Api.Clients;
+using TaskManagement.Api.Contracts;
 using TaskManagement.Api.Data;
 using TaskManagement.Api.Messaging;
 using TaskManagement.Api.Models;
 using TaskManagement.Api.Services;
-using TaskManagement.Contracts.Events;
+using TaskManagement.Api.Contracts.Events;
 
 namespace TaskManagement.UnitTests
 {

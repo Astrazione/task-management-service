@@ -1,17 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskManagement.Api.Clients.TaskAudit;
-using TaskManagement.Api.Contracts.Tasks;
+using TaskManagement.Api.Clients;
+using TaskManagement.Api.Contracts;
 using TaskManagement.Api.Data;
 using TaskManagement.Api.Messaging;
 using TaskManagement.Api.Models;
-using TaskManagement.Contracts.Events;
+using TaskManagement.Api.Contracts.Events;
 
 namespace TaskManagement.Api.Services
 {
-	public sealed class TaskService(
-		TaskDbContext dbContext,
-		ITaskEventProducer eventProducer,
-		ITaskAuditClient auditClient) : ITaskService
+	public sealed class TaskService(TaskDbContext dbContext, ITaskEventProducer eventProducer, ITaskAuditClient auditClient) : ITaskService
 	{
 		public async Task<TaskResponse> CreateAsync(CreateTaskRequest request, CancellationToken cancellationToken)
 		{
@@ -53,7 +50,7 @@ namespace TaskManagement.Api.Services
 			var task = await dbContext.Tasks.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
 			if (task is null) return null;
-		
+
 			task.Title = request.Title;
 			task.Description = request.Description;
 			task.Status = request.Status;

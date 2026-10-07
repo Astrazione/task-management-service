@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using TaskManagement.Api.Clients.TaskAudit;
+using TaskManagement.Api.Clients;
 using TaskManagement.Api.Data;
-using TaskManagement.Api.Endpoints.Tasks;
+using TaskManagement.Api.Endpoints;
 using TaskManagement.Api.Messaging;
 using TaskManagement.Api.Services;
-using TaskManagement.Contracts.Grpc;
+using TaskManagement.Api.Contracts.Grpc;
 
 
 var builder = WebApplication.CreateBuilder(args);

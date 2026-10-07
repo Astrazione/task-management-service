@@ -1,24 +1,24 @@
 using Confluent.Kafka;
 using System.Text.Json;
-using TaskManagement.Contracts.Events;
+using TaskManagement.Api.Contracts.Events;
 
 namespace TaskEvents.Consumer
 {
-	public class TaskEventConsumer : BackgroundService
+	public class TaskEventConsumer(IConfiguration configuration, ILogger<TaskEventConsumer> logger) : BackgroundService
 	{
-		private readonly IConfiguration _configuration;
-		private readonly ILogger<TaskEventConsumer> _logger;
-
-		public TaskEventConsumer(IConfiguration configuration, ILogger<TaskEventConsumer> logger)
-		{
-			_configuration = configuration;
-			_logger = logger;
-		}
+		private readonly IConfiguration _configuration = configuration;
+		private readonly ILogger<TaskEventConsumer> _logger = logger;
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 		{
 			await Task.Yield();
-			ConsumerConfig config = GetConsumerConfig();
+			ConsumerConfig config = new()
+            {
+				BootstrapServers = _configuration["Kafka:BootstrapServers"],
+				GroupId = _configuration["Kafka:GroupId"],
+				AutoOffsetReset =  _configuration.GetValue<AutoOffsetReset>("Kafka:AutoOffsetReset"),
+				EnableAutoCommit = _configuration.GetValue<bool>("Kafka:EnableAutoCommit")
+			};
 
 			using var consumer = new ConsumerBuilder<string, string>(config).Build();
 			consumer.Subscribe(_configuration["Kafka:Topic"]);
@@ -34,7 +34,7 @@ namespace TaskEvents.Consumer
 					if (taskEvent is null) continue;
 
 					_logger.LogInformation(
-						"Получено событие {EventId}, задача: {TaskId}, название задачи: {Title}, статус задачи: {Status}, тип события: {EventType}",
+						"Received event {EventId} via Kafka, task: {TaskId}, task title: {Title}, task status: {Status}, event type: {EventKind}",
 						taskEvent.EventId,
 						taskEvent.TaskId,
 						taskEvent.Title,
@@ -47,21 +47,12 @@ namespace TaskEvents.Consumer
 			}
 			catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
 			{
-				//штатное завершение работы приложения
+				// normal application shutdown
 			}
 			finally
 			{
 				consumer.Close();
 			}
 		}
-
-		private ConsumerConfig GetConsumerConfig() =>
-			new()
-			{
-				BootstrapServers = _configuration["Kafka:BootstrapServers"],
-				GroupId = "task-events-consumer",
-				AutoOffsetReset = AutoOffsetReset.Earliest,
-				EnableAutoCommit = true
-			};
 	}
 }

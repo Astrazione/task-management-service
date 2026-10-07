@@ -3,7 +3,7 @@
 namespace TaskManagement.Api.Models
 {
 	/// <summary>
-	/// Статус задачи
+	/// User task status
 	/// </summary>
 	[JsonConverter(typeof(JsonStringEnumConverter))]
 	public enum TaskItemStatus

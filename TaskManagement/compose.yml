@@ -18,8 +18,10 @@ services:
                 Encrypt=True;
                 TrustServerCertificate=True;
 
-            Kafka__BootstrapServers: kafka:19092
-            Kafka__Topic: task-events
+            Kafka__BootstrapServers: ${KAFKA_BOOTSTRAP_SERVERS:-kafka:19092}
+            Kafka__Topic: ${KAFKA_TOPIC:-task-events}
+            Kafka__EnableIdempotence: "${KAFKA_ENABLE_IDEMPOTENCE:-true}"
+            Kafka__Acks: ${KAFKA_ACKS:-All}
 
             Grpc__TaskAuditUrl: http://task-audit:8080
         
@@ -56,8 +58,11 @@ services:
         environment:
             DOTNET_ENVIRONMENT: Development
 
-            Kafka__BootstrapServers: kafka:19092
-            Kafka__Topic: task-events
+            Kafka__BootstrapServers: ${KAFKA_BOOTSTRAP_SERVERS:-kafka:19092}
+            Kafka__Topic: ${KAFKA_TOPIC:-task-events}
+            Kafka__GroupId: ${KAFKA_CONSUMER_GROUP_ID:-task-events-consumer}
+            Kafka__AutoOffsetReset: ${KAFKA_AUTO_OFFSET_RESET:-Earliest}
+            Kafka__EnableAutoCommit: "${KAFKA_ENABLE_AUTO_COMMIT:-true}"
         
         depends_on:
             kafka-init:
@@ -140,7 +145,7 @@ services:
                     --bootstrap-server kafka:19092 \
                     --create \
                     --if-not-exists \
-                    --topic task-events \
+                    --topic ${KAFKA_TOPIC:-task-events} \
                     --partitions 1 \
                     --replication-factor 1
 

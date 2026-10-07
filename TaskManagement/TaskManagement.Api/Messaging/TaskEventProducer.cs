@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
-using TaskManagement.Contracts.Events;
+using TaskManagement.Api.Contracts.Events;
 
 namespace TaskManagement.Api.Messaging
 {
@@ -17,8 +17,8 @@ namespace TaskManagement.Api.Messaging
 			var config = new ProducerConfig
 			{
 				BootstrapServers = _options.BootstrapServers,
-				EnableIdempotence = true,
-				Acks = Acks.All
+				EnableIdempotence = _options.EnableIdempotence,
+				Acks = _options.Acks
 			};
 
 			_producer = new ProducerBuilder<string, string>(config).Build();

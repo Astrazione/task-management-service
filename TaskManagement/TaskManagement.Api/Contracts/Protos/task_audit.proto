@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "TaskManagement.Contracts.Grpc";
+option csharp_namespace = "TaskManagement.Api.Contracts.Grpc";
 
 package taskaudit;
 

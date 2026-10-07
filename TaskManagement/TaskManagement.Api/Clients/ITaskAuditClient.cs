@@ -1,6 +1,6 @@
-﻿using TaskManagement.Contracts.Events;
+﻿using TaskManagement.Api.Contracts.Events;
 
-namespace TaskManagement.Api.Clients.TaskAudit
+namespace TaskManagement.Api.Clients
 {
 	public interface ITaskAuditClient
 	{

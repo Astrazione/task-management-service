@@ -1,10 +1,10 @@
 ﻿using Google.Protobuf.WellKnownTypes;
-using TaskManagement.Contracts.Events;
-using TaskManagement.Contracts.Grpc;
-using TaskAuditClient = TaskManagement.Contracts.Grpc.TaskAudit.TaskAuditClient;
+using TaskManagement.Api.Contracts.Events;
+using TaskManagement.Api.Contracts.Grpc;
+using TaskAuditClient = TaskManagement.Api.Contracts.Grpc.TaskAudit.TaskAuditClient;
 
 
-namespace TaskManagement.Api.Clients.TaskAudit
+namespace TaskManagement.Api.Clients
 {
 	public sealed class GrpcTaskAuditClient(TaskAuditClient client) : ITaskAuditClient
 	{

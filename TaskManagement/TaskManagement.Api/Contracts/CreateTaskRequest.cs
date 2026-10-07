@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TaskManagement.Api.Models;
 
-namespace TaskManagement.Api.Contracts.Tasks
+namespace TaskManagement.Api.Contracts
 {
 	/// <summary>
-	/// Запрос на создание задачи
+	/// Request to create a task
 	/// </summary>
-	/// <param name="Title">Название задачи</param>
-	/// <param name="Description">Описание задачи</param>
-	/// <param name="Status">Статус задачи</param>
+	/// <param name="Title">Task title</param>
+	/// <param name="Description">Task description</param>
+	/// <param name="Status">Task status</param>
 	public sealed record CreateTaskRequest(
 		[property: Required]
 		[property: StringLength(200)]
